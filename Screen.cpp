@@ -5,7 +5,7 @@
 #include "Screen.h"
 #include "Toolbox.h"
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 Screen::Screen(){
     Toolbox& toolbox = Toolbox::getInstance();
@@ -59,5 +59,3 @@ std::vector<std::vector<float>> Screen::locationsWithinRadius(std::vector<std::v
     }
     return locationsWithinRadius;
 }*/
-
-

@@ -8,8 +8,7 @@
 #include <iostream>
 #include <vector>
 
-
-void startWindow() {
+void startWindow(UFOlist& ufolist) {
 
     Toolbox &toolbox = Toolbox::getInstance();
 
@@ -48,11 +47,14 @@ void startWindow() {
 
                     //cursorPosition.setString("(" + std::to_string(position.x) + ", " + std::to_string(position.y));
 
+                    //this draws the mouse click
+                    cursorPosition.setStyle(sf::Text::Bold);
                     cursorPosition.setString("(" + std::to_string(screen.getLongitude(position.x - screen.xpos)) + ", " +
-                    std::to_string(screen.getLatitude(position.y - screen.ypos)) + ")");
+                                             std::to_string(screen.getLatitude(position.y - screen.ypos)) + ")");
 
                     std::string str = cursorPosition.getString();
                     screen.updateLines(position.x, position.y);
+
                 }
                 //this is going to have to find and print all the surrounding UFOs
                 // SELECT count(*) FROM nuforc_reports where city_longitude is not null and country = "USA"

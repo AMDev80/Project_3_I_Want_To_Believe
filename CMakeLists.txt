@@ -10,7 +10,8 @@ set(SOURCE_FILES main.cpp
         UFO.cpp
         UFO.h
         MergeSort.h
-        QuickSort.h)
+        QuickSort.h
+        Button.cpp)
 
 add_executable(Project_3_I_Want_To_Believe ${SOURCE_FILES})
 

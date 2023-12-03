@@ -20,4 +20,3 @@ Toolbox::Toolbox() {
     circle.setFillColor(green);
     //create initial window
 }
-

@@ -31,6 +31,6 @@ int main()
 //            }
 //        }
 //    }
-    startWindow();
+    startWindow(List);
 
 }
