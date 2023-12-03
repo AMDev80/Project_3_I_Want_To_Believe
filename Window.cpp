@@ -20,6 +20,35 @@ string lengthCheck(string base) {
     return base;
 }
 
+// generates the data that appears on the left side
+string sightingsString(vector<UFOsighting> &sightings, const int &page_num) {
+    string str;
+    for (int i = page_num; i < sightings.size(); i++) {
+        if (i == page_num + 6) { // maximum UFO data to display
+            break;
+        }
+        if (sightings.at(i).date == -1) {
+            str = "No UFO's Sighted";
+            break;
+        }
+        string date = to_string(sightings.at(i).date);
+        string year = date.substr(0, 4);
+        string month = date.substr(4, 2);
+        string day = date.substr(6, 2);
+        str += month;
+        str += "/";
+        str += day;
+        str += "/";
+        str += year;
+        str += "\nDuration: ";
+        str += lengthCheck(sightings.at(i).duration);
+        str += "\nShape: ";
+        str += lengthCheck(sightings.at(i).shape);
+        str += "\n\n";
+    }
+    return str;
+}
+
 
 void startWindow(UFOlist& ufolist) {
 
@@ -55,7 +84,11 @@ void startWindow(UFOlist& ufolist) {
     Screen screen;
     std::vector <std::vector <float>> locations = {{-128, 25}, {-127, 26}, {-90, 30}};
 
+    vector<UFOsighting> sightings;
+    int longitude;
+    int latitude;
     int page_num = 0; // increment/decrement this num by 6 as the user pages up and down to see the UFO data
+    bool quick = true;
 
     while (toolbox.window.isOpen()) {
         sf::Event event;
@@ -83,42 +116,29 @@ void startWindow(UFOlist& ufolist) {
                     screen.updateLines(position.x, position.y);
 
                     // Edited by Aidan 12:12 PM 12/3
-                    int longitude = static_cast<int>(screen.getLongitude(position.x - screen.xpos));
-                    int latitude = static_cast<int>(screen.getLatitude(position.y - screen.ypos));
+                    page_num = 0;
+                    longitude = static_cast<int>(screen.getLongitude(position.x - screen.xpos));
+                    latitude = static_cast<int>(screen.getLatitude(position.y - screen.ypos));
 
                     // positions of latitude and longitude are swapped in GetSigthingsAt method
-                    vector<UFOsighting> sightings = ufolist.GetSightingsAt(latitude, longitude).second;
-                    quickSort(sightings, 0, sightings.size() - 1); // have an if statement for when to sort by merge or quick
+                    // get sightings
+                    sightings = ufolist.GetSightingsAt(latitude, longitude).second;
 
-                    string sightingsString = "";
-
-                    for (int i = page_num; i < sightings.size(); i++) {
-                        if (i == 6) { // maximum UFO data to display
-                            break;
-                        }
-                        if (sightings.at(i).date == -1) {
-                            sightingsString = "No UFO's Sighted";
-                            break;
-                        }
-                        string date = to_string(sightings.at(i).date);
-                        string year = date.substr(0, 4);
-                        string month = date.substr(4, 2);
-                        string day = date.substr(6, 2);
-                        sightingsString += month;
-                        sightingsString += "/";
-                        sightingsString += day;
-                        sightingsString += "/";
-                        sightingsString += year;
-                        sightingsString += "\nDuration: ";
-                        sightingsString += lengthCheck(sightings.at(i).duration);
-                        sightingsString += "\nShape: ";
-                        sightingsString += lengthCheck(sightings.at(i).shape);
-                        sightingsString += "\n\n";
+                    // sort sightings either with quick sort or merge sort
+                    if (quick) {
+                        quickSort(sightings, 0, sightings.size() - 1);
                     }
-                    sightingData.setString(sightingsString);
+                    else {
+                        mergeSort(sightings, 0, sightings.size() - 1);
+                    }
+
+                    sightingData.setString(sightingsString(sightings, page_num));
                 }
 
-                // if for when click in buttons/inside the data pane.
+                if (position.x > 730) { // test value
+                    page_num += 6;
+                    sightingData.setString(sightingsString(sightings, page_num));
+                }
 
                 //this is going to have to find and print all the surrounding UFOs
                 // SELECT count(*) FROM nuforc_reports where city_longitude is not null and country = "USA"
