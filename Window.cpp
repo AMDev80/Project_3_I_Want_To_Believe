@@ -10,6 +10,17 @@
 #include "QuickSort.h"
 #include "MergeSort.h"
 
+// checks the length of a string so that it does not extend past the edge of the borders
+string lengthCheck(string base) {
+    int size = base.size();
+    if (size > 14) {
+        base.erase(11, base.size() - 11);
+        base += "...";
+    }
+    return base;
+}
+
+
 void startWindow(UFOlist& ufolist) {
 
     Toolbox &toolbox = Toolbox::getInstance();
@@ -43,6 +54,9 @@ void startWindow(UFOlist& ufolist) {
 
     Screen screen;
     std::vector <std::vector <float>> locations = {{-128, 25}, {-127, 26}, {-90, 30}};
+
+    int page_num = 0; // increment/decrement this num by 6 as the user pages up and down to see the UFO data
+
     while (toolbox.window.isOpen()) {
         sf::Event event;
 
@@ -69,7 +83,6 @@ void startWindow(UFOlist& ufolist) {
                     screen.updateLines(position.x, position.y);
 
                     // Edited by Aidan 12:12 PM 12/3
-
                     int longitude = static_cast<int>(screen.getLongitude(position.x - screen.xpos));
                     int latitude = static_cast<int>(screen.getLatitude(position.y - screen.ypos));
 
@@ -78,12 +91,16 @@ void startWindow(UFOlist& ufolist) {
                     quickSort(sightings, 0, sightings.size() - 1); // have an if statement for when to sort by merge or quick
 
                     string sightingsString = "";
-                    for (const auto& sight : sightings) {
-                        if (sight.date == -1) {
+
+                    for (int i = page_num; i < sightings.size(); i++) {
+                        if (i == 6) { // maximum UFO data to display
+                            break;
+                        }
+                        if (sightings.at(i).date == -1) {
                             sightingsString = "No UFO's Sighted";
                             break;
                         }
-                        string date = to_string(sight.date);
+                        string date = to_string(sightings.at(i).date);
                         string year = date.substr(0, 4);
                         string month = date.substr(4, 2);
                         string day = date.substr(6, 2);
@@ -93,13 +110,16 @@ void startWindow(UFOlist& ufolist) {
                         sightingsString += "/";
                         sightingsString += year;
                         sightingsString += "\nDuration: ";
-                        sightingsString += sight.duration;
+                        sightingsString += lengthCheck(sightings.at(i).duration);
                         sightingsString += "\nShape: ";
-                        sightingsString += sight.shape;
+                        sightingsString += lengthCheck(sightings.at(i).shape);
                         sightingsString += "\n\n";
                     }
                     sightingData.setString(sightingsString);
                 }
+
+                // if for when click in buttons/inside the data pane.
+
                 //this is going to have to find and print all the surrounding UFOs
                 // SELECT count(*) FROM nuforc_reports where city_longitude is not null and country = "USA"
             }
