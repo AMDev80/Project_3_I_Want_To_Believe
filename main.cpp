@@ -7,7 +7,7 @@ int main()
 {
     // check to see if sorts work
     UFOlist List("files/UFOPROJECTCSV.csv");
-    vector<UFOsighting> og_list = List.GetSightingsAt(40, -90).second; // test num
+    vector<UFOsighting> og_list = List.GetSightingsAt(40, -90).second; // test nums
     for (const auto& sight : og_list) {
         cout << sight.date << " ";
     }
