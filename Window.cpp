@@ -7,6 +7,8 @@
 #include "Screen.h"
 #include <iostream>
 #include <vector>
+#include "QuickSort.h"
+#include "MergeSort.h"
 
 void startWindow(UFOlist& ufolist) {
 
@@ -55,6 +57,18 @@ void startWindow(UFOlist& ufolist) {
                     std::string str = cursorPosition.getString();
                     screen.updateLines(position.x, position.y);
 
+                    // Edited by Aidan 12:12 PM 12/3
+                    // print out sightings at location selected
+                    cout << screen.getLongitude(position.x - screen.xpos) << ", " << screen.getLatitude(position.y - screen.ypos) << endl;
+                    int longitude = static_cast<int>(screen.getLongitude(position.x - screen.xpos));
+                    int latitude = static_cast<int>(screen.getLatitude(position.y - screen.ypos));
+                    // positions of latitude and longitude are swapped in GetSigthingsAt method
+                    vector<UFOsighting> sightings = ufolist.GetSightingsAt(latitude, longitude).second;
+                    quickSort(sightings, 0, sightings.size() - 1); // have an if statement for when to sort by merge or quick
+                    for (const auto& sight : sightings) {
+                        cout << "Date: " << sight.date << "\nDuration: " << sight.duration << "\nShape:" << sight.shape
+                             << "\n\n";
+                    }
                 }
                 //this is going to have to find and print all the surrounding UFOs
                 // SELECT count(*) FROM nuforc_reports where city_longitude is not null and country = "USA"
