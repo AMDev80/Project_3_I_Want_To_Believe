@@ -16,7 +16,7 @@ struct UFOsighting {
     string shape, duration;
     // Constructor
     UFOsighting(pair<double, double>& coordinate_, int& date_, string& shape_, string& duration_) :
-                coordinate(coordinate_), date(date_), shape(shape_), duration(duration_) {}
+            coordinate(coordinate_), date(date_), shape(shape_), duration(duration_) {}
 };
 // typedef 3D vector of UFO sightings to store vector of UFO sightings at a given X, Y
 typedef vector<vector<vector<UFOsighting>>> ufo_grid;
@@ -30,7 +30,6 @@ class UFOlist {
     // Container for CSV information
     ufo_grid UFOs;
     // Not yet implemented
-    double grid_div_factor;
 public:
     UFOlist(string file);
     ufo_grid GetGrid();

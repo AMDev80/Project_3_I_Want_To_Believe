@@ -10,6 +10,7 @@ Toolbox::Toolbox() {
     mapTexture.loadFromFile("files/usaMap.jpg"); //loads map image
     window1.loadFromFile("files/window1.jpg");
     window2.loadFromFile("files/window2.jpg");
+    window3.loadFromFile("files/window3.jpg");
     redLineH.loadFromFile("files/redLineH.jpg");
     redLineV.loadFromFile("files/redLineV.jpg");
     upButtonTexture.loadFromFile("files/upButton.jpg");
