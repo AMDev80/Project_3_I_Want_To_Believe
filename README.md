@@ -1,4 +1,4 @@
-# Project_3_I_Want_To_Believe
+# Project 3: I Want To Believe
 Title: I Want To Believe - Organizing UFO Sighting Data in the USA
 
 Team Name: Team Burnout
