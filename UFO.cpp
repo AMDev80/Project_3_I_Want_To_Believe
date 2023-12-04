@@ -27,8 +27,9 @@ ufo_grid UFOlist::GridInitializer() {
     return init;
 }
 // UFOlist Constructor Helper
-ufo_grid UFOlist::UFOread(string file) {
+pair<ufo_grid, vector<UFOsighting>> UFOlist::UFOread(string file) {
     ufo_grid init = GridInitializer();
+    vector<UFOsighting> all_sightings;
     // Open csv data
     fstream fin;
     fin.open(file, ios::in);
@@ -49,7 +50,7 @@ ufo_grid UFOlist::UFOread(string file) {
         // Format cell data
         double y = stod(row[0]);
         double x = stod(row[1]);
-        pair<double, double> coordinate{y, x};
+        pair<double,double> coordinate{y, x};
         // Formats data
         int date = stoi(row[2].substr(0, 4)
                         + row[2].substr(5, 2) + row[2].substr(8, 2));
@@ -63,7 +64,7 @@ ufo_grid UFOlist::UFOread(string file) {
         int x_index = int(x + 128);
         int height = 54-23;
         int width = (-65) - (-128);
-        // Checks for good input excluding title row
+        // Checks for good input excluding title row (9 bad rows)
         if (y_index >= 0 and y_index <= height and x_index >= 0 and x_index <= width) {
             // If this grid square is yet to be populated
             if (init[y_index][x_index][0].date == -1) {
@@ -76,29 +77,36 @@ ufo_grid UFOlist::UFOread(string file) {
                 // Instantiate at back of vector for grid square
                 init[y_index][x_index].push_back(U);
             }
+            all_sightings.push_back(U);
         }
     }
-    return init;
+    return {init, all_sightings};
 }
 
 UFOlist::UFOlist(string file) {
-    UFOs = UFOread(file);
+    pair<ufo_grid, vector<UFOsighting>> initial_values = UFOread(file);
+    UFOs = initial_values.first;
+    all_sightings = initial_values.second;
 }
 // Get ufo list
 ufo_grid UFOlist::GetGrid() {
     return UFOs;
 }
+// Get all sightings
+vector<UFOsighting> UFOlist::GetAllSightings() {
+    return all_sightings;
+}
 // Get grid square from list
 pair<bool, vector<UFOsighting>> UFOlist::GetSightingsAt(double y, double x) {
-   // Normalize Values
-   int y_index = int(y - 23);
-   int x_index = int(x + 128);
-   // Bool determines if it holds any real sighting data, or just placeholder initial values
-   bool containsUFO = true;
+    // Normalize Values
+    int y_index = int(y - 23);
+    int x_index = int(x + 128);
+    // Bool determines if it holds any real sighting data, or just placeholder initial values
+    bool containsUFO = true;
     // If placeholder
-   if (UFOs[y_index][x_index][0].date == -1)
-       containsUFO = false;
+    if (UFOs[y_index][x_index][0].date == -1)
+        containsUFO = false;
 
-   return {containsUFO, UFOs[y_index][x_index]};
+    return {containsUFO, UFOs[y_index][x_index]};
 }
 
