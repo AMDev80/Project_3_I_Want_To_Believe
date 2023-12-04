@@ -13,14 +13,14 @@
 // checks the length of a string so that it does not extend past the edge of the borders
 string lengthCheck(string base) {
     int size = base.size();
-    if (size > 14) {
-        base.erase(11, base.size() - 11);
+    if (size > 19) {
+        base.erase(16, base.size() - 16);
         base += "...";
     }
     return base;
 }
 
-// generates the data that appears on the left side
+// generates the data that appears on the right side
 string sightingsString(vector<UFOsighting> &sightings, const int &page_num) {
     string str;
     for (int i = page_num; i < sightings.size(); i++) {
@@ -65,19 +65,19 @@ void startWindow(UFOlist& ufolist) {
     sf::Text cursorPosition;
 
     cursorPosition.setFont(toolbox.font);
-    cursorPosition.setCharacterSize(16);
+    cursorPosition.setCharacterSize(13);
     cursorPosition.setFillColor(toolbox.green);
     cursorPosition.setFillColor(sf::Color::Green);
-    cursorPosition.setPosition(745, 60);
+    cursorPosition.setPosition(745, 110);
 
     // created by Aidan 12:47 12/3
     sf::Text sightingData;
 
     sightingData.setFont(toolbox.font);
-    sightingData.setCharacterSize(16);
+    sightingData.setCharacterSize(13);
     sightingData.setFillColor(toolbox.green);
     sightingData.setFillColor(sf::Color::Green);
-    sightingData.setPosition(745, 80);
+    sightingData.setPosition(745, 135);
     sightingData.setStyle(sf::Text::Bold);
 
 
@@ -135,14 +135,38 @@ void startWindow(UFOlist& ufolist) {
                     sightingData.setString(sightingsString(sightings, page_num));
                 }
 
-                if (position.x > 730) { // test value
-                    page_num += 6;
-                    sightingData.setString(sightingsString(sightings, page_num));
-                }
-
                 //this is going to have to find and print all the surrounding UFOs
                 // SELECT count(*) FROM nuforc_reports where city_longitude is not null and country = "USA"
             }
+
+            //Edited by Anna on 12/3 at 5:43 PM
+            if (event.type == sf::Event::MouseButtonPressed) {//on mouse click for upButton
+                sf::Vector2i position = sf::Mouse::getPosition(toolbox.window); //gets mouse pos relative to window
+                if (position.x > toolbox.upButton->getPosition().x
+                    and position.x < toolbox.upButton->getPosition().x + toolbox.upButtonTexture.getSize().x
+                    and position.y > toolbox.upButton->getPosition().y
+                    and position.y < toolbox.upButton->getPosition().y + toolbox.upButtonTexture.getSize().y) {
+                    toolbox.upButton->onClick();
+                    page_num -= 6;
+                    if (page_num < 0) {
+                        page_num += 6;
+                    }
+                    sightingData.setString(sightingsString(sightings, page_num));
+                }
+                if (position.x > toolbox.downButton->getPosition().x
+                    and position.x < toolbox.downButton->getPosition().x + toolbox.downButtonTexture.getSize().x
+                    and position.y > toolbox.downButton->getPosition().y
+                    and position.y < toolbox.downButton->getPosition().y + toolbox.downButtonTexture.getSize().y) { //down button
+                    toolbox.downButton->onClick();
+                    page_num += 6;
+                    if (page_num > sightings.size() - 1) {
+                        page_num -= 6;
+                    }
+                    sightingData.setString(sightingsString(sightings, page_num));
+                }
+            }
+
+            ///add positions for buttons
         }
         // -180 to 180
         // -90 to 90
@@ -155,6 +179,11 @@ void startWindow(UFOlist& ufolist) {
         toolbox.window.draw(window1);
         toolbox.window.draw(window2);
 
+        //draw buttons
+
+        toolbox.window.draw(*(toolbox.upButton->getSprite()));
+        toolbox.window.draw(*(toolbox.downButton->getSprite()));
+
 
         sf::Sprite world(screen.usaMap.getTexture()); //have to convert renderTexture back into sprite
         world.setPosition(screen.xpos, screen.ypos);
@@ -166,4 +195,14 @@ void startWindow(UFOlist& ufolist) {
 
         toolbox.window.display();
     }
+}
+
+void increasePage(){ //returns position
+    Toolbox& toolbox = toolbox.getInstance();
+    toolbox.page++;
+}
+
+void decreasePage(){ //returns position
+    Toolbox& toolbox = toolbox.getInstance();
+    toolbox.page--;
 }
